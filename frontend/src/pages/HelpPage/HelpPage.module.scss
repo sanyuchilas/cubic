@@ -4,16 +4,30 @@
   p {
     @apply pt-1.5 pb-1.5 text-white;
 
+    * {
+      @apply text-white;
+    }
+
     &:nth-child(3n + 2) {
       @apply text-dark;
+
+      * {
+        @apply text-dark;
+      }
     }
   }
 
   input {
-    @apply flex flex-row items-center p-1 pl-2 w-96 outline-none;
+    @apply flex flex-row items-center p-1 pl-2 w-full outline-none;
+
+    max-width: 24rem;
 
     &::placeholder {
       @apply text-sm;
     }
+  }
+
+  .empty {
+    @apply border-8 border-transparent;
   }
 }
