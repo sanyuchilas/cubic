@@ -6,13 +6,13 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-
+        'dark': '#333'
       },
       transitionTimingFunction: {
         DEFAULT: 'ease-in-out'
       },
       transitionDuration: {
-        DEFAULT: '50ms'
+        DEFAULT: '200ms'
       }
     },
   },

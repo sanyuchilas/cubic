@@ -1,0 +1,12 @@
+.btn {
+  @apply flex flex-row items-center justify-center flex-nowrap p-3 m-3 h-auto rounded-xl uppercase font-semibold;
+  min-width: 7rem;
+}
+
+.white {
+  @apply text-white border-2 border-white hover:bg-white hover:text-dark transition-all;
+}
+
+.white_fill {
+  @apply border-2 border-white bg-white hover:bg-opacity-0 hover:text-white transition-all;
+}
