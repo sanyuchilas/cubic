@@ -9,9 +9,10 @@ const HelpPage = () => {
   )
   const [showSecret, setShowSecret] = useState(isAlreadyCorrect)
 
-  function inputChangeHandler(evt: React.ChangeEvent<HTMLInputElement>) {
+  const words = ['как', 'работает', 'контрамоция']
+  const set = new Set(words.join(''))
 
-    const words = ['как', 'работает', 'контрамоция']
+  function inputChangeHandler(evt: React.ChangeEvent<HTMLInputElement>) {
 
     let k = 0
 
@@ -26,13 +27,34 @@ const HelpPage = () => {
     } else if (k === 2) {
       setProtocolValue(`Вопрос содержит ${k} правильных слова`)
     } else if (k === 3) {
-      setProtocolValue(`Вопрос верный`)
-      evt.target.disabled = true
-      setShowSecret(true)
-      localStorage.setItem('protocol', evt.target.value)
+      if (evt.target.value.length < words.join('').length + words.length - 1) {
+        setProtocolValue('Расставьте пробелы корректно')
+      } else {
+        setProtocolValue(`Вопрос верный`)
+        evt.target.disabled = true
+        setShowSecret(true)
+        localStorage.setItem('protocol', evt.target.value)
+      }
     } else {
       if (evt.target.value) {
-        setProtocolValue(`Впорос неверный`)
+        let j = 0
+        let cur = new Set(evt.target.value.toLowerCase())
+        
+        set.forEach(el => {
+          if (cur.has(el)) {
+            j += 1
+          }  
+        })
+        
+        if (j === 1) {
+          setProtocolValue(`Вопрос содержит 1 верную букву`)
+        } else if (j > 1 && j < 5) {
+          setProtocolValue(`Вопрос содержит ${j} верные буквы`)
+        } else if (j >= 5) {
+          setProtocolValue(`Вопрос содержит ${j} верных букв`)
+        } else {
+          setProtocolValue(`Впорос неверный`)
+        }
       } else {
         setProtocolValue(``)
       }

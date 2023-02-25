@@ -13,7 +13,7 @@ const GamePage = () => {
       <OrbitControls enableZoom ={false}/>
       {isReverse && <TestBox position={[0, 0, 0]} />}
       <TestBox position={[0, 2, 0]} />
-      <TestBox position={[0, -2, 0]} />
+      <TestBox position={[0, -2, 0]}/>
     </Canvas>
   );
 };
