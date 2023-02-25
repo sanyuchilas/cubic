@@ -1,0 +1,19 @@
+.container {
+  @apply flex flex-col items-start justify-self-start pt-1.5 pb-1.5 h-full w-full;
+
+  p {
+    @apply pt-1.5 pb-1.5 text-white;
+
+    &:nth-child(3n + 2) {
+      @apply text-dark;
+    }
+  }
+
+  input {
+    @apply flex flex-row items-center p-1 pl-2 w-96 outline-none;
+
+    &::placeholder {
+      @apply text-sm;
+    }
+  }
+}

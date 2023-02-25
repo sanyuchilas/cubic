@@ -12,8 +12,12 @@
 }
 
 body, html, #root {
-  @apply bg-blue-300;
+  @apply bg-gray-400;
   overflow-x: hidden;
   height: 100vh;
   width: 100vw;
+}
+
+hr {
+  @apply w-full mb-1.5 mt-1.5 border-slate-100;
 }
