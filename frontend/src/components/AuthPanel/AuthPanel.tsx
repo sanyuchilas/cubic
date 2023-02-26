@@ -1,11 +1,17 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '../../app/hooks';
+import { defaultState } from '../../app/reducers/gameReducer';
 import { gameSelector } from '../../app/selectors/gameSelector';
 import { store } from '../../app/store';
-import { MAIN_ROUTE } from '../../utils/constants';
+import { getAnomalyText } from '../../utils/getAnomalyText';
+import { myIntervals } from '../../utils/myIntervals';
+import { myTimeouts } from '../../utils/myTomiouts';
 import { spawnModal } from '../../utils/spawnModal';
 import styles from './AuthPanel.module.scss';
+
+let isAnomaly1 = false
+let isAnomaly2 = false
 
 const AuthPanel = () => {
   const {
@@ -32,12 +38,15 @@ const AuthPanel = () => {
   function everyInterval() {
     let accident = 0
     let random = Math.random()
+
     if (random > 0.975) {
       accident = 1
     }
-    if (random < 0.025) {
+
+    if (random < 0.02) {
       accident = -1
     }
+
     dispatch({type: 'game', payload: {
       time: store.getState().game.time + (3100 - rate) / 1000,
       workload: store.getState().game.workload + accident
@@ -45,14 +54,43 @@ const AuthPanel = () => {
   }
 
   useEffect(() => {
-    const intervalId = setInterval(everyInterval, 3100 - rate)
+    if (isDirty1 && !isAnomaly1 && !myTimeouts.timeouts.size) {
+      isAnomaly1 = true
+      myTimeouts.create(() => {
+        isAnomaly1 = false
+        spawnModal(getAnomalyText(1), 10, navigate)
+        dispatch({type: 'game', payload: defaultState})
+        myTimeouts.clearAll()
+      } , 15000)
+    }
 
-    return () => clearInterval(intervalId)
+    if (isDirty2 && !isAnomaly2 && !myTimeouts.timeouts.size) {
+      isAnomaly2 = true
+      myTimeouts.create(() => {
+        isAnomaly2 = false
+        spawnModal(getAnomalyText(2), 10, navigate)
+        dispatch({type: 'game', payload: defaultState})
+        myTimeouts.clearAll()
+      } , 15000)
+    }
+
+    if (time >= 300) {
+      spawnModal('T-16-G обнаружила внешнее подключение и самоуничтожилась...', 10, navigate)
+      dispatch({type: 'game', payload: defaultState})
+    }
+  }, [time])
+
+  useEffect(() => {
+    const intervalId = myIntervals.create(everyInterval, 3100 - rate)
+
+    return () => myIntervals.clear(intervalId)
   }, [rate])
 
   function onTransgressClickHandler(evt: React.MouseEvent<HTMLButtonElement>) {
     if (workload <= 60) {
-      spawnModal('Вы успешно трансгрессировали C-16-O в безопасное место. Он незамедлительно отыскал свои наработки, а потом исчез...', 10, navigate)
+      spawnModal(
+        <span><b>Поздравляем, все получилось</b>. Вы успешно трансгрессировали C-16-O в безопасное место, после чего он незамедлительно отыскал свои наработки, а потом исчез...</span>, 10, navigate)
+      dispatch({type: 'game', payload: defaultState})
       return
     }
 

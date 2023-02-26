@@ -2,16 +2,18 @@ import { ReactElement } from "react";
 import ReactDOMServer from "react-dom/server";
 import { NavigateFunction } from "react-router-dom";
 import { MAIN_ROUTE } from "./constants";
+import { myIntervals } from "./myIntervals";
 
 export const spawnModal = (
   body: ReactElement | string, delay?: number, navigate?: NavigateFunction, to?: string
 ) => {
   const modal = document.querySelector('#modal') as HTMLElement
   const btn = document.createElement('button')
-  btn.innerHTML = '<u style="color: white;">Пропустить</u>'
+  btn.innerHTML = '<u>Пропустить</u>'
   btn.addEventListener('click', hideModal);
 
   function showModal() {
+    myIntervals.clearAll()
     modal.style.zIndex = '100'
     modal.style.visibility = 'visible'
     modal.style.opacity = '1'
@@ -26,7 +28,8 @@ export const spawnModal = (
   const timeOutId = setTimeout(hideModal, delay ? delay * 1000 : 10000)
 
   function hideModal() {
-    console.log(1)
+    btn.removeEventListener('click', hideModal)
+    clearTimeout(timeOutId)
     modal.style.opacity = '0'
     setTimeout(() => {
       modal.style.visibility = 'hidden'
@@ -36,8 +39,6 @@ export const spawnModal = (
     if (navigate) {
       navigate(to ?? MAIN_ROUTE)
     }
-    btn.removeEventListener('click', hideModal)
-    clearTimeout(timeOutId)
   }
 
   showModal()

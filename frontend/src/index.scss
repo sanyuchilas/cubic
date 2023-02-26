@@ -39,6 +39,9 @@ input {
   visibility: hidden;
   opacity: 0;
   z-index: -100;
+  * {
+    @apply text-white text-center;
+  }
 }
 
 ::-webkit-scrollbar-track {
