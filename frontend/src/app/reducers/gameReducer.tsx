@@ -22,7 +22,7 @@ export const defaultState = {
   isContramot2: false,
   isContramotor1Broken: false,
   rate: 2100,
-  showPanel: false
+  showPanel: true
 }
 
 const curState = JSON.parse(localStorage.getItem('game_store') ?? 'null') 

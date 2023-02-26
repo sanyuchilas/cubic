@@ -56,6 +56,25 @@ const AuthPanel = () => {
     }, 1500)
   }
 
+  function brokeContraomotorClickHandler() {
+    dispatch({
+      type: 'game',
+      payload: {
+        isContramotor1Broken: true,
+        workload: workload - 10,
+      }
+    })
+  }
+
+  function togglePanelClickHandler() {
+    dispatch({
+      type: 'game',
+      payload: {
+        showPanel: !showPanel
+      }
+    })
+  }
+
   function parseTime(time: number): string {
     let seconds: string | number
     let minutes: string | number
@@ -75,15 +94,30 @@ const AuthPanel = () => {
     return `${minutes}:${seconds}`
   }
 
+  function contramotorClickHandler(evt: React.MouseEvent<HTMLButtonElement>) {
+    const { name } = evt.target as HTMLButtonElement
+
+    if (name === 'cts1') {
+      dispatch({
+        type: 'game',
+        payload: {
+          isContramot1: !isContramot1
+        }
+      })
+    } else if (name === 'cts2') {
+      dispatch({
+        type: 'game',
+        payload: {
+          isContramot2: !isContramot2
+        }
+      })
+    }
+  }
+
   return (
     <>
       <button
-        onClick={() => dispatch({
-          type: 'game',
-          payload: {
-            showPanel: !showPanel
-          }
-        })}
+        onClick={togglePanelClickHandler}
       >{showPanel ? 'Спрятать панель' : 'Показать панель'} T-16-G</button>
       {showPanel && 
         <>
@@ -118,24 +152,13 @@ const AuthPanel = () => {
               <button 
                 name='cts1'
                 disabled={isContramotor1Broken}
-                onClick={() => dispatch({
-                  type: 'game',
-                  payload: {
-                    isContramot1: !isContramot1
-                  }})
-                }
+                onClick={contramotorClickHandler}
               >Контрамоцировать</button>
             </div>
           </div>
           <button
             disabled={isContramotor1Broken}
-            onClick={() => dispatch({
-              type: 'game',
-              payload: {
-                isContramotor1Broken: true,
-                workload: workload - 10,
-              }})
-            }
+            onClick={brokeContraomotorClickHandler}
           >
             Сломать контрамотор (ЧВП1)
           </button>
@@ -148,12 +171,7 @@ const AuthPanel = () => {
               <button
                 name='cts2'
                 disabled={isContramotor1Broken}
-                onClick={() => dispatch({
-                  type: 'game',
-                  payload: {
-                    isContramot2: !isContramot2
-                  }})
-                }
+                onClick={contramotorClickHandler}
               >Контрамоцировать</button>
             </div>
           </div>

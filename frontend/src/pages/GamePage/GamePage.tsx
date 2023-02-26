@@ -11,6 +11,10 @@ const GamePage = () => {
   const camera = new PerspectiveCamera(50, 2, 0.1, 1000)
   const dispatch = useAppDispatch()
 
+  function restartClickHandler() {
+    dispatch({type: 'game', payload: defaultState})
+  }
+
   camera.position.set(7.58398, 4.99278, 17.957)
 
   return (
@@ -78,12 +82,7 @@ const GamePage = () => {
       <Panel/>
       <button
         className={styles.restart}
-        onClick={() => {
-          dispatch({
-            type: 'game',
-            payload: defaultState
-          })
-        }}
+        onClick={restartClickHandler}
       >Начать заново</button>
     </div>
   );
