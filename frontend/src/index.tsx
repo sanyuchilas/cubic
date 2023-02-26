@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom/client';
 import './index.scss';
 import App from './App';
 import { BrowserRouter, HashRouter } from 'react-router-dom'
+import { GAME_ROUTE } from './utils/constants';
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
@@ -15,3 +16,10 @@ root.render(
     </BrowserRouter>
   </React.StrictMode>
 );
+
+window.onbeforeunload = function(evt) {
+  if (window.location.href.includes('game')) {
+    return "При обновлении страницы прогресс игры будет потерян"
+  }
+  evt.preventDefault()
+};

@@ -2,6 +2,7 @@ import { OrbitControls, TrackballControls } from '@react-three/drei';
 import { Canvas } from '@react-three/fiber';
 import { PerspectiveCamera } from 'three';
 import { FisrtLevel } from '../../components/FirstLevel/FirstLevel';
+import Panel from '../../components/Panel/Panel';
 import styles from './GamePage.module.scss';
 
 const GamePage = () => {
@@ -71,7 +72,7 @@ const GamePage = () => {
         <FisrtLevel/>
         <axesHelper args={[5]}/>
       </Canvas>
-      <div className={styles.panel}></div>
+      <Panel/>
     </div>
   );
 };
