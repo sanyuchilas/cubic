@@ -17,9 +17,9 @@ root.render(
   </React.StrictMode>
 );
 
-window.onbeforeunload = function(evt) {
-  if (window.location.href.includes('game')) {
-    return "При обновлении страницы прогресс игры будет потерян"
-  }
-  evt.preventDefault()
-};
+// window.onbeforeunload = function(evt) {
+//   if (window.location.href.includes(GAME_ROUTE)) {
+//     return "При обновлении страницы прогресс игры будет потерян"
+//   }
+//   evt.preventDefault()
+// };

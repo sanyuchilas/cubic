@@ -1,3 +1,30 @@
 .panel {
-  @apply h-1/4 w-1/4 right-0 bg-gray-400 absolute z-10;
+  @apply flex flex-col right-0 bg-none absolute z-10 p-2;
+
+  button {
+    @apply p-1 pl-2 pr-2 bg-gray-300 mb-1 mt-1 border border-gray-600 active:bg-gray-400 disabled:active:bg-gray-300 disabled:opacity-30 whitespace-nowrap transition-all;
+  }
+
+  .cts {
+
+    .cts_title {
+      @apply flex flex-row justify-between items-center;
+    }
+
+  }
+  
+  .header {
+    @apply flex flex-row items-center;
+
+    .timer {
+      @apply ml-auto pl-2;
+    }
+  }
+  .data_rate {
+    @apply flex flex-row items-center pb-1;
+
+    .data_rate_select {
+      @apply outline-none ml-2;
+    }
+  }
 }
