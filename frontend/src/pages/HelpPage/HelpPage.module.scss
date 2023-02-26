@@ -17,16 +17,6 @@
     }
   }
 
-  input {
-    @apply flex flex-row items-center p-1 pl-2 w-full outline-none;
-
-    max-width: 24rem;
-
-    &::placeholder {
-      @apply text-sm;
-    }
-  }
-
   .empty {
     @apply border-8 border-transparent;
   }

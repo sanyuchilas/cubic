@@ -24,6 +24,16 @@ hr {
   @apply w-full mb-1.5 mt-1.5 border-slate-100;
 }
 
+input {
+  @apply flex flex-row items-center p-1 pl-2 w-full outline-none;
+
+  max-width: 24rem;
+
+  &::placeholder {
+    @apply text-sm;
+  }
+}
+
 ::-webkit-scrollbar-track {
   @apply bg-none;
 }
