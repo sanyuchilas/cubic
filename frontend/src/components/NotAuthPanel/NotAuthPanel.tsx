@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useAppDispatch } from '../../app/hooks';
 import styles from './NotAuthPanel.module.scss'
 
 const login = 'C-32-O'
@@ -8,9 +9,13 @@ const NotAuthPanel = () => {
   const [loginValue, setLoginValue] = useState('')
   const [passwordValue, setPasswordValue] = useState('')
   const [error, setError] = useState(false)
+  const dispatch = useAppDispatch()
 
   function onBtnClickHandler() {
     if (passwordValue === password && login === loginValue) {
+      dispatch({type: 'game', payload: {
+        isAuth: true
+      }})
       return
     }
 
