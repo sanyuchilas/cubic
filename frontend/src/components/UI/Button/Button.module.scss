@@ -8,5 +8,5 @@
 }
 
 .white_fill {
-  @apply border-2 border-white bg-white hover:bg-opacity-0 hover:text-white transition-all;
+  @apply border-2 border-white text-dark bg-white hover:bg-opacity-0 hover:text-white transition-all;
 }

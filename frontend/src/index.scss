@@ -34,6 +34,13 @@ input {
   }
 }
 
+#modal {
+  @apply flex flex-col p-5 justify-center items-center bg-gray-900 absolute text-white w-screen h-screen top-0 left-0 transition-opacity duration-500;
+  visibility: hidden;
+  opacity: 0;
+  z-index: -100;
+}
+
 ::-webkit-scrollbar-track {
   @apply bg-none;
 }

@@ -1,7 +1,9 @@
 import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '../../app/hooks';
 import { gameSelector } from '../../app/selectors/gameSelector';
 import { store } from '../../app/store';
+import { spawModal } from '../../utils/spawnModal';
 import styles from './AuthPanel.module.scss';
 
 const AuthPanel = () => {
@@ -12,10 +14,13 @@ const AuthPanel = () => {
     isContramot2,
     isContramotor1Broken,
     rate,
-    showPanel
+    showPanel,
+    isDirty1,
+    isDirty2,
   } = useAppSelector(gameSelector)
+  const navigate = useNavigate()
   const dispatch = useAppDispatch()
-  const [trangressValue, setTrangressValue] = useState('Трансгрессировать')
+  const [trangressValue, setTrangressValue] = useState('Трансгрессировать C-16-O')
   const onRateChange = (evt: React.ChangeEvent<HTMLSelectElement>) => {
     dispatch({type: 'game', payload: {
       workload: workload - (rate - +evt.target.value) / 500
@@ -23,45 +28,49 @@ const AuthPanel = () => {
     dispatch({type: 'game', payload: { rate: +evt.target.value }})
   }
 
+  function everyInterval() {
+    let accident = 0
+    let random = Math.random()
+    if (random > 0.975) {
+      accident = 1
+    }
+    if (random < 0.025) {
+      accident = -1
+    }
+    dispatch({type: 'game', payload: {
+      time: store.getState().game.time + (3100 - rate) / 1000,
+      workload: store.getState().game.workload + accident
+    }})
+  }
+
   useEffect(() => {
-    const intervalId = setInterval(() => {
-      let accident = 0
-      let random = Math.random()
-      if (random > 0.975) {
-        accident = 1
-      }
-      if (random < 0.01) {
-        accident = -1
-      }
-      dispatch({type: 'game', payload: {
-        time: store.getState().game.time + (3100 - rate) / 1000,
-        workload: store.getState().game.workload + accident
-      }})
-    }, 3100 - rate)
+    const intervalId = setInterval(everyInterval, 3100 - rate)
 
     return () => clearInterval(intervalId)
   }, [rate])
 
   function onTransgressClickHandler(evt: React.MouseEvent<HTMLButtonElement>) {
-    if (workload <= 50) {
+    if (workload <= 20) {
       console.log('Победа')
       return
     }
-
+    spawModal('a')
     setTrangressValue('Недостаточно мощности ЦП');
     (evt.target as HTMLButtonElement).disabled = true;
     setTimeout(() => {
-      setTrangressValue('Трансгрессировать');
+      setTrangressValue('Трансгрессировать C-16-O');
     (evt.target as HTMLButtonElement).disabled = false;
     }, 1500)
   }
 
-  function brokeContraomotorClickHandler() {
+  function brokeContramotorClickHandler() {
     dispatch({
       type: 'game',
       payload: {
         isContramotor1Broken: true,
         workload: workload - 10,
+        isDirty1: true,
+        isDirty2: true
       }
     })
   }
@@ -96,7 +105,6 @@ const AuthPanel = () => {
 
   function contramotorClickHandler(evt: React.MouseEvent<HTMLButtonElement>) {
     const { name } = evt.target as HTMLButtonElement
-
     if (name === 'cts1') {
       dispatch({
         type: 'game',
@@ -157,8 +165,8 @@ const AuthPanel = () => {
             </div>
           </div>
           <button
-            disabled={isContramotor1Broken}
-            onClick={brokeContraomotorClickHandler}
+            disabled={isDirty2}
+            onClick={brokeContramotorClickHandler}
           >
             Сломать контрамотор (ЧВП1)
           </button>
@@ -170,7 +178,7 @@ const AuthPanel = () => {
               <span><u>ЧВП2</u></span>
               <button
                 name='cts2'
-                disabled={isContramotor1Broken}
+                disabled={isDirty1}
                 onClick={contramotorClickHandler}
               >Контрамоцировать</button>
             </div>
