@@ -1,10 +1,9 @@
 import { ReactElement } from "react";
 import ReactDOMServer from "react-dom/server";
 import { NavigateFunction } from "react-router-dom";
-import Button from "../components/UI/Button/Button";
 import { MAIN_ROUTE } from "./constants";
 
-export const spawModal = (
+export const spawnModal = (
   body: ReactElement | string, delay?: number, navigate?: NavigateFunction, to?: string
 ) => {
   const modal = document.querySelector('#modal') as HTMLElement
@@ -24,6 +23,8 @@ export const spawModal = (
     modal.append(btn)
   }
 
+  const timeOutId = setTimeout(hideModal, delay ? delay * 1000 : 10000)
+
   function hideModal() {
     console.log(1)
     modal.style.opacity = '0'
@@ -36,8 +37,8 @@ export const spawModal = (
       navigate(to ?? MAIN_ROUTE)
     }
     btn.removeEventListener('click', hideModal)
+    clearTimeout(timeOutId)
   }
 
   showModal()
-  setTimeout(hideModal, delay ?? 5000)
 }

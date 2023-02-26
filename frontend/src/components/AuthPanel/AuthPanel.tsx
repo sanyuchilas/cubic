@@ -3,7 +3,8 @@ import { useNavigate } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '../../app/hooks';
 import { gameSelector } from '../../app/selectors/gameSelector';
 import { store } from '../../app/store';
-import { spawModal } from '../../utils/spawnModal';
+import { MAIN_ROUTE } from '../../utils/constants';
+import { spawnModal } from '../../utils/spawnModal';
 import styles from './AuthPanel.module.scss';
 
 const AuthPanel = () => {
@@ -50,11 +51,11 @@ const AuthPanel = () => {
   }, [rate])
 
   function onTransgressClickHandler(evt: React.MouseEvent<HTMLButtonElement>) {
-    if (workload <= 20) {
-      console.log('Победа')
+    if (workload <= 60) {
+      spawnModal('Вы успешно трансгрессировали C-16-O в безопасное место. Он незамедлительно отыскал свои наработки, а потом исчез...', 10, navigate)
       return
     }
-    spawModal('a')
+
     setTrangressValue('Недостаточно мощности ЦП');
     (evt.target as HTMLButtonElement).disabled = true;
     setTimeout(() => {
