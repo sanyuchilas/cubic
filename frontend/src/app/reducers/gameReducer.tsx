@@ -9,6 +9,8 @@ export interface GameStoreTypes {
   isContramotor1Broken: boolean;
   rate: 2100;
   showPanel: boolean;
+  isBooted: boolean;
+  isError: boolean;
 }
 
 const game = createAction<GameStoreTypes, 'game'>('game')
@@ -22,6 +24,8 @@ export const defaultState = {
   isContramot2: false,
   isContramotor1Broken: false,
   rate: 2100,
+  isBooted: true,
+  isError: false,
   showPanel: !('ontouchstart' in window)
 }
 

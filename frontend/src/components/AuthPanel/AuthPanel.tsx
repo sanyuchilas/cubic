@@ -4,14 +4,12 @@ import { useAppDispatch, useAppSelector } from '../../app/hooks';
 import { defaultState } from '../../app/reducers/gameReducer';
 import { gameSelector } from '../../app/selectors/gameSelector';
 import { store } from '../../app/store';
+import { WIN_GAME_TEXT } from '../../utils/constants';
 import { getAnomalyText } from '../../utils/getAnomalyText';
 import { myIntervals } from '../../utils/myIntervals';
 import { myTimeouts } from '../../utils/myTomiouts';
 import { spawnModal } from '../../utils/spawnModal';
 import styles from './AuthPanel.module.scss';
-
-let isAnomaly1 = false
-let isAnomaly2 = false
 
 const AuthPanel = () => {
   const {
@@ -24,6 +22,8 @@ const AuthPanel = () => {
     showPanel,
     isDirty1,
     isDirty2,
+    isBooted,
+    isError
   } = useAppSelector(gameSelector)
   const navigate = useNavigate()
   const dispatch = useAppDispatch()
@@ -35,6 +35,11 @@ const AuthPanel = () => {
     dispatch({type: 'game', payload: { rate: +evt.target.value }})
   }
 
+  function finishGame() {
+    myTimeouts.clearAll()
+    dispatch({type: 'game', payload: defaultState})
+  }
+
   function everyInterval() {
     let accident = 0
     let random = Math.random()
@@ -43,7 +48,7 @@ const AuthPanel = () => {
       accident = 1
     }
 
-    if (random < 0.02) {
+    if (random < 0.015) {
       accident = -1
     }
 
@@ -54,29 +59,53 @@ const AuthPanel = () => {
   }
 
   useEffect(() => {
-    if (isDirty1 && !isAnomaly1 && !myTimeouts.timeouts.size) {
-      isAnomaly1 = true
+    if (isDirty1 && !myTimeouts.timeouts.size) {
       myTimeouts.create(() => {
-        isAnomaly1 = false
         spawnModal(getAnomalyText(1), 10, navigate)
-        dispatch({type: 'game', payload: defaultState})
-        myTimeouts.clearAll()
+        finishGame()
       } , 15000)
     }
 
-    if (isDirty2 && !isAnomaly2 && !myTimeouts.timeouts.size) {
-      isAnomaly2 = true
+    if (!isContramot1) {
+      if (!isError && time >= 30 && time < 2 * 60 + 30) {
+        dispatch({type: 'game', payload: { isError: true }})
+      }
+
+      if (isBooted && time >= 2 * 60 + 30 && time < 7 * 60) {
+        dispatch({type: 'game', payload: { 
+          isBooted: false,
+          isAuth: false
+        }})
+        myTimeouts.clearAll()
+      }
+
+      if (!isBooted && time >= 7 * 60) {
+        dispatch({type: 'game', payload: { isBooted: true }})
+      }
+    } else {
+      if (isBooted && time < (10 * 60 - 2 * 60 - 30) && time >= (10 - 7) * 60) {
+        dispatch({type: 'game', payload: { 
+          isBooted: false,
+          isAuth: false
+        }})
+        myTimeouts.clearAll()
+      }
+
+      if (!isBooted && time < (10 - 7) * 60) {
+        dispatch({type: 'game', payload: { isBooted: true }})
+      }
+    }
+
+    if (isDirty2 && !myTimeouts.timeouts.size) {
       myTimeouts.create(() => {
-        isAnomaly2 = false
         spawnModal(getAnomalyText(2), 10, navigate)
-        dispatch({type: 'game', payload: defaultState})
-        myTimeouts.clearAll()
+        finishGame()
       } , 15000)
     }
 
-    if (time >= 300) {
+    if (time >= 60 * 5) {
       spawnModal('T-16-G обнаружила внешнее подключение и самоуничтожилась...', 10, navigate)
-      dispatch({type: 'game', payload: defaultState})
+      finishGame()
     }
   }, [time])
 
@@ -88,9 +117,8 @@ const AuthPanel = () => {
 
   function onTransgressClickHandler(evt: React.MouseEvent<HTMLButtonElement>) {
     if (workload <= 60) {
-      spawnModal(
-        <span><b>Поздравляем, все получилось</b>. Вы успешно трансгрессировали C-16-O в безопасное место, после чего он незамедлительно отыскал свои наработки, а потом исчез...</span>, 10, navigate)
-      dispatch({type: 'game', payload: defaultState})
+      spawnModal(WIN_GAME_TEXT, 10, navigate)
+      finishGame()
       return
     }
 

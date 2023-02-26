@@ -14,7 +14,13 @@ const PI = Math.PI
 
 export function FisrtLevel() {
   const { nodes, materials } = useGLTF(level_1) as GLTFResult
-  const {isContramot1, isContramot2, isContramotor1Broken } = useAppSelector(gameSelector)
+  const {
+    isContramot1, 
+    isContramot2, 
+    isContramotor1Broken,
+    isBooted,
+    isError
+  } = useAppSelector(gameSelector)
 
   return (
     <group dispose={null}>
@@ -28,7 +34,10 @@ export function FisrtLevel() {
           <meshLambertMaterial wireframe color={'black'}/>
         </mesh>
         <mesh geometry={nodes.screen_3.geometry} material={materials.frame}/>
-        <mesh geometry={nodes.screen_3_1.geometry} material={materials.screen} />
+        <mesh 
+          geometry={nodes.screen_3_1.geometry} 
+          material={isBooted ? materials.screen : materials.frame} 
+        />
       </group>
       <group position={[4.12, 1.43, -2.86]}>
         <mesh geometry={nodes['3_btns'].geometry} material={materials.btn_green} />
@@ -54,7 +63,11 @@ export function FisrtLevel() {
       </group>
       <mesh geometry={nodes['2_contramotor'].geometry} castShadow material={materials.boxes} position={[-0.5, 0.59, -0.5]} rotation={[PI, PI / 4, -1.2]} />
       <group position={[-5.95, 2.49, 0.04]}>
-        <mesh geometry={nodes.screen_1.geometry} castShadow material={materials.screen} />
+        <mesh 
+          geometry={nodes.screen_1.geometry} 
+          castShadow 
+          material={isBooted ? materials.screen : materials.frame} 
+        />
         <mesh geometry={nodes.screen_1_1.geometry} castShadow material={materials.frame}>
           <meshLambertMaterial wireframe color={'black'}/>
         </mesh>
