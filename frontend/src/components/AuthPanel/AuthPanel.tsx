@@ -11,16 +11,16 @@ const AuthPanel = () => {
     isContramot1, 
     isContramot2,
     isContramotor1Broken,
+    rate,
+    showPanel
   } = useAppSelector(gameSelector)
   const dispatch = useAppDispatch()
-  const [showPanel, setShowPanel] = useState(false)
-  const [rateValue, setRateValue] = useState(2100)
   const [trangressValue, setTrangressValue] = useState('Трансгрессировать')
   const onRateChange = (evt: React.ChangeEvent<HTMLSelectElement>) => {
     dispatch({type: 'game', payload: {
-      workload: workload - (rateValue - +evt.target.value) / 500
+      workload: workload - (rate - +evt.target.value) / 500
     }})
-    setRateValue(+evt.target.value)
+    dispatch({type: 'game', payload: { rate: +evt.target.value }})
   }
 
   useEffect(() => {
@@ -34,13 +34,13 @@ const AuthPanel = () => {
         accident = -1
       }
       dispatch({type: 'game', payload: {
-        time: store.getState().game.time + (3100 - rateValue) / 1000,
+        time: store.getState().game.time + (3100 - rate) / 1000,
         workload: store.getState().game.workload + accident
       }})
-    }, 3100 - rateValue)
+    }, 3100 - rate)
 
     return () => clearInterval(intervalId)
-  }, [rateValue])
+  }, [rate])
 
   function onTransgressClickHandler(evt: React.MouseEvent<HTMLButtonElement>) {
     if (workload <= 50) {
@@ -78,7 +78,12 @@ const AuthPanel = () => {
   return (
     <>
       <button
-        onClick={() => setShowPanel(!showPanel)}
+        onClick={() => dispatch({
+          type: 'game',
+          payload: {
+            showPanel: !showPanel
+          }
+        })}
       >{showPanel ? 'Спрятать панель' : 'Показать панель'} T-16-G</button>
       {showPanel && 
         <>
@@ -87,7 +92,7 @@ const AuthPanel = () => {
             <select 
               name="date_rate" 
               id="data_rate_select"
-              defaultValue={2100}
+              defaultValue={rate}
               className={styles.data_rate_select}
               onChange={onRateChange}
             >

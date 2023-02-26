@@ -1,12 +1,15 @@
 import { OrbitControls, TrackballControls } from '@react-three/drei';
 import { Canvas } from '@react-three/fiber';
 import { PerspectiveCamera } from 'three';
+import { useAppDispatch } from '../../app/hooks';
 import { FisrtLevel } from '../../components/FirstLevel/FirstLevel';
 import Panel from '../../components/Panel/Panel';
+import { defaultState } from './../../app/reducers/gameReducer';
 import styles from './GamePage.module.scss';
 
 const GamePage = () => {
   const camera = new PerspectiveCamera(50, 2, 0.1, 1000)
+  const dispatch = useAppDispatch()
 
   camera.position.set(7.58398, 4.99278, 17.957)
 
@@ -70,9 +73,18 @@ const GamePage = () => {
           target={[-0.25, 2.5, 0]}
         />
         <FisrtLevel/>
-        <axesHelper args={[5]}/>
+        {/* <axesHelper args={[5]}/> */}
       </Canvas>
       <Panel/>
+      <button
+        className={styles.restart}
+        onClick={() => {
+          dispatch({
+            type: 'game',
+            payload: defaultState
+          })
+        }}
+      >Начать заново</button>
     </div>
   );
 };
