@@ -37,7 +37,7 @@ export function FisrtLevel() {
         <mesh geometry={nodes['3_handle_2'].geometry} material={materials.pipka}>
         </mesh>
       </group>
-      <mesh geometry={nodes['2_freeze'].geometry} castShadow material={materials.freeze} position={[0.5, 0.5, -3.5]}>
+      <mesh geometry={nodes['2_freeze'].geometry} castShadow material={materials.freeze} position={[0.5, 0.5, -3.49]}>
         <meshLambertMaterial wireframe color={'#8DA7D6'}/>
       </mesh>
       <group position={[-0.5, 0.59, -0.5]} rotation={[-Math.PI, Math.PI / 4, -1.2]}>
@@ -52,7 +52,7 @@ export function FisrtLevel() {
         </mesh>
         <mesh geometry={nodes.screen_1_1.geometry} castShadow material={materials.frame}/>
       </group>
-      <mesh geometry={nodes['1_pc'].geometry} castShadow material={materials.pc} position={[-2.5, 0.5, -1.5]}>
+      <mesh geometry={nodes['1_pc'].geometry} castShadow material={materials.pc} position={[-2.5, 0.5, -1.49]}>
         <meshLambertMaterial wireframe color={'black'}/>
       </mesh>
       <group rotation={[0, 0, -Math.PI / 2]} position={[-1.12, -1.12, 0]}>
