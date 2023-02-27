@@ -1,3 +1,7 @@
 .panel {
   @apply flex flex-col right-0 bg-none absolute z-10 p-2 pt-1;
+
+  .timer {
+    @apply ml-auto pl-2;
+  }
 }

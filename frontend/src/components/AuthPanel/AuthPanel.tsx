@@ -1,19 +1,14 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '../../app/hooks';
-import { defaultState } from '../../app/reducers/gameReducer';
 import { gameSelector } from '../../app/selectors/gameSelector';
-import { store } from '../../app/store';
 import { WIN_GAME_TEXT } from '../../utils/constants';
-import { getAnomalyText } from '../../utils/getAnomalyText';
-import { myIntervals } from '../../utils/myIntervals';
-import { myTimeouts } from '../../utils/myTomiouts';
+import { finishGame } from '../../utils/finishGame';
 import { spawnModal } from '../../utils/spawnModal';
 import styles from './AuthPanel.module.scss';
 
 const AuthPanel = () => {
   const {
-    time, 
     workload, 
     isContramot1, 
     isContramot2,
@@ -22,8 +17,6 @@ const AuthPanel = () => {
     showPanel,
     isDirty1,
     isDirty2,
-    isBooted,
-    isError
   } = useAppSelector(gameSelector)
   const navigate = useNavigate()
   const dispatch = useAppDispatch()
@@ -35,90 +28,10 @@ const AuthPanel = () => {
     dispatch({type: 'game', payload: { rate: +evt.target.value }})
   }
 
-  function finishGame() {
-    myTimeouts.clearAll()
-    dispatch({type: 'game', payload: defaultState})
-  }
-
-  function everyInterval() {
-    let accident = 0
-    let random = Math.random()
-
-    if (random > 0.975) {
-      accident = 1
-    }
-
-    if (random < 0.015) {
-      accident = -1
-    }
-
-    dispatch({type: 'game', payload: {
-      time: store.getState().game.time + (3100 - rate) / 1000,
-      workload: store.getState().game.workload + accident
-    }})
-  }
-
-  useEffect(() => {
-    if (isDirty1 && !myTimeouts.timeouts.size) {
-      myTimeouts.create(() => {
-        spawnModal(getAnomalyText(1), 10, navigate)
-        finishGame()
-      } , 15000)
-    }
-
-    if (!isContramot1) {
-      if (!isError && time >= 30 && time < 2 * 60 + 30) {
-        dispatch({type: 'game', payload: { isError: true }})
-      }
-
-      if (isBooted && time >= 2 * 60 + 30 && time < 7 * 60) {
-        dispatch({type: 'game', payload: { 
-          isBooted: false,
-          isAuth: false
-        }})
-        myTimeouts.clearAll()
-      }
-
-      if (!isBooted && time >= 7 * 60) {
-        dispatch({type: 'game', payload: { isBooted: true }})
-      }
-    } else {
-      if (isBooted && time < (10 * 60 - 2 * 60 - 30) && time >= (10 - 7) * 60) {
-        dispatch({type: 'game', payload: { 
-          isBooted: false,
-          isAuth: false
-        }})
-        myTimeouts.clearAll()
-      }
-
-      if (!isBooted && time < (10 - 7) * 60) {
-        dispatch({type: 'game', payload: { isBooted: true }})
-      }
-    }
-
-    if (isDirty2 && !myTimeouts.timeouts.size) {
-      myTimeouts.create(() => {
-        spawnModal(getAnomalyText(2), 10, navigate)
-        finishGame()
-      } , 15000)
-    }
-
-    if (time >= 60 * 5) {
-      spawnModal('T-16-G обнаружила внешнее подключение и самоуничтожилась...', 10, navigate)
-      finishGame()
-    }
-  }, [time])
-
-  useEffect(() => {
-    const intervalId = myIntervals.create(everyInterval, 3100 - rate)
-
-    return () => myIntervals.clear(intervalId)
-  }, [rate])
-
   function onTransgressClickHandler(evt: React.MouseEvent<HTMLButtonElement>) {
     if (workload <= 60) {
       spawnModal(WIN_GAME_TEXT, 10, navigate)
-      finishGame()
+      finishGame(dispatch)
       return
     }
 
@@ -149,25 +62,6 @@ const AuthPanel = () => {
         showPanel: !showPanel
       }
     })
-  }
-
-  function parseTime(time: number): string {
-    let seconds: string | number
-    let minutes: string | number
-
-    if (time % 60 < 10) {
-      seconds = '0' + time % 60
-    } else {
-      seconds = time % 60
-    }
-
-    if (Math.floor(time / 60) < 10) {
-      minutes = '0' + Math.floor(time / 60)
-    } else {
-      minutes = Math.floor(time / 60)
-    }
-
-    return `${minutes}:${seconds}`
   }
 
   function contramotorClickHandler(evt: React.MouseEvent<HTMLButtonElement>) {
@@ -214,9 +108,6 @@ const AuthPanel = () => {
             <span className={styles.workload}>
               Нагрузка на ЦП: {workload}%
             </span>
-            <span className={styles.timer}>
-              {parseTime(time)}
-            </span>
           </div>
           <button
             onClick={onTransgressClickHandler}
@@ -239,7 +130,7 @@ const AuthPanel = () => {
           </button>
           <span>Reboot + Autoboot - 2:30 (ЧВП1)</span>
           <span>Shutdown - 3:30 (ЧВП1)</span>
-          <span>Autoboot - 7:00 (ЧВП1)</span>
+          <span>Autoboot - 8:00 (ЧВП1)</span>
           <div className={styles.cts}>
             <div className={styles.cts_title}>
               <span><u>ЧВП2</u></span>

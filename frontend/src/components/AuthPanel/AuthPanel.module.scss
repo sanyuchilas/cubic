@@ -6,10 +6,6 @@
 
 .header {
   @apply flex flex-row items-center;
-
-  .timer {
-    @apply ml-auto pl-2;
-  }
 }
 .data_rate {
   @apply flex flex-row items-center pb-1 pt-1;
