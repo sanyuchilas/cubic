@@ -4,6 +4,7 @@ import { PerspectiveCamera } from 'three';
 import { useAppDispatch } from '../../app/hooks';
 import { FisrtLevel } from '../../components/FirstLevel/FirstLevel';
 import Panel from '../../components/Panel/Panel';
+import { myTimeouts } from '../../utils/myTomiouts';
 import { defaultState } from './../../app/reducers/gameReducer';
 import styles from './GamePage.module.scss';
 
@@ -12,6 +13,7 @@ const GamePage = () => {
   const dispatch = useAppDispatch()
 
   function restartClickHandler() {
+    myTimeouts.clearAll()
     dispatch({type: 'game', payload: defaultState})
   }
 

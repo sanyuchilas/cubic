@@ -123,14 +123,14 @@ const AuthPanel = () => {
             </div>
           </div>
           <button
-            disabled={isDirty2}
+            disabled={isContramotor1Broken}
             onClick={brokeContramotorClickHandler}
           >
             Сломать контрамотор (ЧВП1)
           </button>
           <span>Reboot + Autoboot - 2:30 (ЧВП1)</span>
           <span>Shutdown - 3:30 (ЧВП1)</span>
-          <span>Autoboot - 8:00 (ЧВП1)</span>
+          <span>Autoboot - 7:00 (ЧВП1)</span>
           <div className={styles.cts}>
             <div className={styles.cts_title}>
               <span><u>ЧВП2</u></span>

@@ -15,15 +15,15 @@ import styles from './Panel.module.scss';
 
 const Panel = () => {
   const {
-    isAuth,
+    isBooted,
     time,
     rate,
     isDirty1,
     isDirty2,
-    isBooted,
     isContramot1,
     isContramot2,
-    isError
+    isError,
+    isBooting
   } = useAppSelector(gameSelector)
   const dispatch = useDispatch()
   const navigate = useNavigate()
@@ -63,53 +63,53 @@ const Panel = () => {
 
     if (!isContramot1) {
       // Error
-      if (!isError && time >= 30 && time < 2 * 60 + 30) {
+      if (!isError && time >= 15 && time < 2 * 60 + 30) {
         dispatch({type: 'game', payload: { isError: true }})
       }
-      // Reboot + Autoboot end
-      if (!isBooted && time >= 2 * 60 + 38 && time < 2 * 60 + 48) {
-        dispatch({type: 'game', payload: { 
-          isBooted: true,
-          isBooting: false,
-          isAuth: true,
-          isError: true,
-        }})
-        myTimeouts.clearAll()
-      }
+
       // Reboot + Autoboot start
-      if (isBooted && time >= 2 * 60 + 30 && time < 2 * 60 + 38) {
+      if (isBooted && time >= 2 * 60 + 30 && time < 2 * 60 + 35) {
         dispatch({type: 'game', payload: { 
           isBooted: false,
           isBooting: true,
           isDirty1: false,
           isDirty2: false,
-          isAuth: false,
           isError: false,
         }})
         myTimeouts.clearAll()
-      }
-      // Shutdown
-      if (isBooted && time >= 3 * 60 + 30 && time < 8 * 60) {
-        dispatch({type: 'game', payload: { 
-          isBooted: false,
-          isAuth: false
-        }})
-        myTimeouts.clearAll()
+        const timeoutId = myTimeouts.create(() => {
+          dispatch({type: 'game', payload: { 
+            isBooted: true,
+            isBooting: false,
+          }})
+          myTimeouts.clear(timeoutId)
+        }, 8000)
       }
 
-      if (!isBooted && time >= 8 * 60) {
-        dispatch({type: 'game', payload: { isBooted: true }})
+      // Shutdown
+      if (isBooted && time >= 3 * 60 + 30 && time < 7 * 60) {
+        dispatch({type: 'game', payload: { 
+          isBooted: false,
+        }})
+        myTimeouts.clearAll()
       }
     } else {
-      if (isBooted && time < (10 * 60 - 3 * 60 - 30) && time >= (10 - 8) * 60) {
+      // Error
+      if (isError && time < (10 * 60 - 2 * 60 - 30)) {
+        dispatch({type: 'game', payload: { isError: false }})
+      }
+
+      // Shutdown
+      if (isBooted && time < (10 * 60 - 3 * 60 - 30) 
+      && time >= ((10 - 7) * 60 )) {
         dispatch({type: 'game', payload: { 
           isBooted: false,
-          isAuth: false
         }})
         myTimeouts.clearAll()
       }
 
-      if (!isBooted && time < (10 - 8) * 60) {
+      // Autoboot
+      if (!isBooted && time < ((10 - 7) * 60 )) {
         dispatch({type: 'game', payload: { isBooted: true }})
       }
     }
@@ -152,7 +152,7 @@ const Panel = () => {
       <span className={styles.timer}>
         {parseTime(time)}
       </span>
-      {isAuth ? <AuthPanel/> : <NotAuthPanel/>}
+      {isBooted ? <AuthPanel/> : <NotAuthPanel/>}
     </div>
   );
 };

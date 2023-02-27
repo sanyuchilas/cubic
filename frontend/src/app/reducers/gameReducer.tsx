@@ -1,7 +1,7 @@
 import { createAction, createReducer } from "@reduxjs/toolkit";
 
 export interface GameStoreTypes {
-  isAuth: boolean;
+  isBooted: boolean;
   workload: number;
   time: number;
   isContramot1: boolean;
@@ -9,13 +9,15 @@ export interface GameStoreTypes {
   isContramotor1Broken: boolean;
   rate: 2100;
   showPanel: boolean;
-  isBooted: boolean;
+  isBooting: boolean;
   isError: boolean;
+  isAuth: boolean;
 }
 
 const game = createAction<GameStoreTypes, 'game'>('game')
 export const defaultState = {
-  isAuth: true,
+  isAuth: false,
+  isBooted: true,
   workload: 50,
   time: 0,
   isDirty1: false,
@@ -24,7 +26,7 @@ export const defaultState = {
   isContramot2: false,
   isContramotor1Broken: false,
   rate: 2100,
-  isBooted: true,
+  isBooting: false,
   isError: false,
   showPanel: !('ontouchstart' in window)
 }
