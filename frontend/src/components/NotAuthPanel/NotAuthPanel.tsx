@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '../../app/hooks';
 import { gameSelector } from '../../app/selectors/gameSelector';
 import { finishGame } from '../../utils/finishGame';
+import { myTimeouts } from '../../utils/myTomiouts';
 import { spawnModal } from '../../utils/spawnModal';
 import styles from './NotAuthPanel.module.scss';
 
@@ -23,7 +24,7 @@ const NotAuthPanel = () => {
         isAuth: true,
         isBooted: true
       }})
-      setTimeout(() => {
+      myTimeouts.create(() => {
         spawnModal('T-16-G обнаружила внешнее подключение и самоуничтожилась...', 10, navigate)
         finishGame(dispatch)
       }, 20000)

@@ -13,13 +13,14 @@ export interface GameStoreTypes {
   isError: boolean;
   isAuth: boolean;
   isShutdowning: boolean;
+  freezeEffect: number;
 }
 
 const game = createAction<GameStoreTypes, 'game'>('game')
 export const defaultState = {
   isAuth: false,
   isBooted: true,
-  workload: 50,
+  workload: 90,
   time: 0,
   isDirty1: false,
   isDirty2: false,
@@ -30,6 +31,7 @@ export const defaultState = {
   isBooting: false,
   isShutdowning: false,
   isError: false,
+  freezeEffect: 0,
   showPanel: !('ontouchstart' in window)
 }
 

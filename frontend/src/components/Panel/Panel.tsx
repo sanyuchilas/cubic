@@ -23,27 +23,49 @@ const Panel = () => {
     isContramot1,
     isContramot2,
     isError,
-    isBooting,
-    isAuth
+    isAuth,
+    workload,
+    freezeEffect,
+    isContramot1Broken
   } = useAppSelector(gameSelector)
   const dispatch = useDispatch()
   const navigate = useNavigate()
 
-  function everyInterval() {
-    let accident = 0
+  useEffect(() => {
+    dispatch({
+      type: 'game',
+      payload: {
+        workload: workload + (isContramot2 ? -freezeEffect : freezeEffect)
+      }
+    })
+  }, [isContramot2])
+
+  function randomizeWorkload() {
     let random = Math.random()
+    if (random > 0.9) return 1
+    if (random < 0.015) return -1
+    return 0
+  }
 
-    if (random > 0.975) {
-      accident = 1
-    }
+  function everyInterval() {
+    let accident = randomizeWorkload()
+    const time = store.getState().game.time
+    const rate = store.getState().game.rate
+    const workload = store.getState().game.workload
+    const isContramot2 = store.getState().game.isContramot2
+    const freezeChange = Math.floor(time / 100) + (3100 - rate) / 1000 - 1
+    const freezeEffect = store.getState().game.freezeEffect
 
-    if (random < 0.015) {
-      accident = -1
+    if (isContramot2 && time <= 240 && time % 2 === 0) {
+      accident -= freezeChange
     }
 
     dispatch({type: 'game', payload: {
-      time: store.getState().game.time + (3100 - rate) / 1000,
-      workload: store.getState().game.workload + accident
+      time: time + (3100 - rate) / 1000,
+      workload: Math.max(0, Math.min(100, workload + accident)),
+      freezeEffect: freezeEffect - (freezeChange ? accident : 0) > 46 
+      ? 46
+      : freezeEffect - (freezeChange ? accident : 0)
     }})
   }
 
@@ -112,7 +134,11 @@ const Panel = () => {
       && time >= ((10 - 7) * 60 )) {
         dispatch({type: 'game', payload: { 
           isBooted: false,
-          isBooting: true
+          isBooting: true,
+          isContramotor1Broken: false,
+          workload: isContramot1Broken ? workload + 15 : workload,
+          isDirty1: false,
+          isDirty2: false
         }})
         myTimeouts.clearAll()
         const timeoutId = myTimeouts.create(() => {
@@ -133,8 +159,6 @@ const Panel = () => {
       spawnModal('T-16-G обнаружила внешнее подключение и самоуничтожилась...', 10, navigate)
       finishGame(dispatch)
     }
-
-    console.log(myTimeouts)
   }, [time])
 
   useEffect(() => {

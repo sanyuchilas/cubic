@@ -29,7 +29,7 @@ const AuthPanel = () => {
   }
 
   function onTransgressClickHandler(evt: React.MouseEvent<HTMLButtonElement>) {
-    if (workload <= 60) {
+    if (workload <= 30) {
       spawnModal(WIN_GAME_TEXT, 10, navigate)
       finishGame(dispatch)
       return
@@ -37,9 +37,10 @@ const AuthPanel = () => {
 
     setTrangressValue('Недостаточно мощности ЦП');
     (evt.target as HTMLButtonElement).disabled = true;
-    setTimeout(() => {
+    const id = setTimeout(() => {
       setTrangressValue('Трансгрессировать C-16-O');
-    (evt.target as HTMLButtonElement).disabled = false;
+      (evt.target as HTMLButtonElement).disabled = false;
+      clearTimeout(id)
     }, 1500)
   }
 
@@ -48,7 +49,7 @@ const AuthPanel = () => {
       type: 'game',
       payload: {
         isContramotor1Broken: true,
-        workload: workload - 10,
+        workload: workload - 15,
         isDirty1: true,
         isDirty2: true
       }
@@ -136,7 +137,7 @@ const AuthPanel = () => {
               <span><u>ЧВП2</u></span>
               <button
                 name='cts2'
-                disabled={isDirty1}
+                disabled={isDirty2}
                 onClick={contramotorClickHandler}
               >Контрамоцировать</button>
             </div>
