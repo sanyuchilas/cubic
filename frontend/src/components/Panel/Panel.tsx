@@ -23,7 +23,8 @@ const Panel = () => {
     isContramot1,
     isContramot2,
     isError,
-    isBooting
+    isBooting,
+    isAuth
   } = useAppSelector(gameSelector)
   const dispatch = useDispatch()
   const navigate = useNavigate()
@@ -68,7 +69,7 @@ const Panel = () => {
       }
 
       // Reboot + Autoboot start
-      if (isBooted && time >= 2 * 60 + 30 && time < 2 * 60 + 35) {
+      if (!isAuth && isBooted && time >= 2 * 60 + 30 && time < 2 * 60 + 35) {
         dispatch({type: 'game', payload: { 
           isBooted: false,
           isBooting: true,
@@ -87,7 +88,7 @@ const Panel = () => {
       }
 
       // Shutdown
-      if (isBooted && time >= 3 * 60 + 30 && time < 7 * 60) {
+      if (!isAuth && isBooted && time >= 3 * 60 + 30 && time < 7 * 60) {
         dispatch({type: 'game', payload: { 
           isBooted: false,
         }})
@@ -100,7 +101,7 @@ const Panel = () => {
       }
 
       // Shutdown
-      if (isBooted && time < (10 * 60 - 3 * 60 - 30) 
+      if (!isAuth && isBooted && time < (10 * 60 - 3 * 60 - 30) 
       && time >= ((10 - 7) * 60 )) {
         dispatch({type: 'game', payload: { 
           isBooted: false,
@@ -109,7 +110,7 @@ const Panel = () => {
       }
 
       // Autoboot
-      if (!isBooted && time < ((10 - 7) * 60 )) {
+      if (!isAuth && !isBooted && time < ((10 - 7) * 60 )) {
         dispatch({type: 'game', payload: { isBooted: true }})
       }
     }

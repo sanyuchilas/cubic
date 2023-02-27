@@ -26,7 +26,7 @@ const NotAuthPanel = () => {
       myTimeouts.create(() => {
         spawnModal('T-16-G обнаружила внешнее подключение и самоуничтожилась...', 10, navigate)
         finishGame(dispatch)
-      })
+      }, 20000)
       return
     }
 
