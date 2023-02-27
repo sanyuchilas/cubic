@@ -1,14 +1,10 @@
 import { useGLTF } from '@react-three/drei'
-import { GLTF } from 'three/examples/jsm/loaders/GLTFLoader'
 import { useAppSelector } from '../../app/hooks'
 import { gameSelector } from '../../app/selectors/gameSelector'
+import { GLTFResult } from '../../types'
+import ErrorText from '../models/ErrorText'
 //@ts-ignore
 import level_1 from './../../assets/3D/level_1.1.gltf'
-
-type GLTFResult = GLTF & {
-  nodes: Record<string, THREE.Mesh>
-  materials: Record<string, THREE.MeshStandardMaterial>
-}
 
 const PI = Math.PI
 
@@ -25,6 +21,7 @@ export function FisrtLevel() {
   return (
     <group dispose={null}>
       {/* <mesh geometry={nodes.plane.geometry} material={materials.plane} position={[0, -0.21, 0]} scale={94.98}/> */}
+      {isError && <ErrorText/>}
       <mesh geometry={nodes['3_cube'].geometry} castShadow material={materials.object} position={[5.5, 0.5, 1.5]}>
         <meshLambertMaterial wireframe color={'black'}/>
       </mesh>

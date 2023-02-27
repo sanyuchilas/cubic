@@ -117,7 +117,7 @@ const AuthPanel = () => {
               <span><u>ЧВП1</u></span>
               <button 
                 name='cts1'
-                disabled={isContramotor1Broken}
+                disabled={isContramotor1Broken || isDirty1}
                 onClick={contramotorClickHandler}
               >Контрамоцировать</button>
             </div>

@@ -1,7 +1,6 @@
 import { useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import { isError } from 'util';
 import { useAppSelector } from '../../app/hooks';
 import { gameSelector } from '../../app/selectors/gameSelector';
 import { store } from '../../app/store';
@@ -48,9 +47,16 @@ const Panel = () => {
   }
 
   useEffect(() => {
-    if (isDirty1 && !myTimeouts.timeouts.size) {
+    if (isDirty1 && isBooted && !myTimeouts.timeouts.size) {
       myTimeouts.create(() => {
         spawnModal(getAnomalyText(1), 10, navigate)
+        finishGame(dispatch)
+      } , 15000)
+    }
+
+    if (isDirty2 && isBooted && !myTimeouts.timeouts.size) {
+      myTimeouts.create(() => {
+        spawnModal(getAnomalyText(2), 10, navigate)
         finishGame(dispatch)
       } , 15000)
     }
@@ -60,18 +66,23 @@ const Panel = () => {
       if (!isError && time >= 30 && time < 2 * 60 + 30) {
         dispatch({type: 'game', payload: { isError: true }})
       }
-      // Autoboot
+      // Reboot + Autoboot end
       if (!isBooted && time >= 2 * 60 + 38 && time < 2 * 60 + 48) {
         dispatch({type: 'game', payload: { 
           isBooted: true,
+          isBooting: false,
           isAuth: true,
           isError: true,
         }})
+        myTimeouts.clearAll()
       }
-      // Reboot
+      // Reboot + Autoboot start
       if (isBooted && time >= 2 * 60 + 30 && time < 2 * 60 + 38) {
         dispatch({type: 'game', payload: { 
           isBooted: false,
+          isBooting: true,
+          isDirty1: false,
+          isDirty2: false,
           isAuth: false,
           isError: false,
         }})
@@ -103,17 +114,12 @@ const Panel = () => {
       }
     }
 
-    if (isDirty2 && !myTimeouts.timeouts.size) {
-      myTimeouts.create(() => {
-        spawnModal(getAnomalyText(2), 10, navigate)
-        finishGame(dispatch)
-      } , 15000)
-    }
-
     if (time >= 60 * 5) {
       spawnModal('T-16-G обнаружила внешнее подключение и самоуничтожилась...', 10, navigate)
       finishGame(dispatch)
     }
+
+    console.log(myTimeouts)
   }, [time])
 
   useEffect(() => {
