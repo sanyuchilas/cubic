@@ -1,6 +1,10 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '../../app/hooks';
 import { gameSelector } from '../../app/selectors/gameSelector';
+import { finishGame } from '../../utils/finishGame';
+import { myTimeouts } from '../../utils/myTomiouts';
+import { spawnModal } from '../../utils/spawnModal';
 import styles from './NotAuthPanel.module.scss'
 
 const login = 'C-32-O'
@@ -11,14 +15,18 @@ const NotAuthPanel = () => {
   const [passwordValue, setPasswordValue] = useState('')
   const [error, setError] = useState(false)
   const dispatch = useAppDispatch()
+  const navigate = useNavigate()
   const { isBooting } = useAppSelector(gameSelector)
 
   function onBtnClickHandler() {
     if (passwordValue === password && login === loginValue) {
       dispatch({type: 'game', payload: {
         isAuth: true,
-        isDirty1: true
       }})
+      myTimeouts.create(() => {
+        spawnModal('T-16-G обнаружила внешнее подключение и самоуничтожилась...', 10, navigate)
+        finishGame(dispatch)
+      })
       return
     }
 
