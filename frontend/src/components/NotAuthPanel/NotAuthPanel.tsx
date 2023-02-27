@@ -3,9 +3,8 @@ import { useNavigate } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '../../app/hooks';
 import { gameSelector } from '../../app/selectors/gameSelector';
 import { finishGame } from '../../utils/finishGame';
-import { myTimeouts } from '../../utils/myTomiouts';
 import { spawnModal } from '../../utils/spawnModal';
-import styles from './NotAuthPanel.module.scss'
+import styles from './NotAuthPanel.module.scss';
 
 const login = 'C-32-O'
 const password = 'ihelpyou'
@@ -16,14 +15,15 @@ const NotAuthPanel = () => {
   const [error, setError] = useState(false)
   const dispatch = useAppDispatch()
   const navigate = useNavigate()
-  const { isBooting } = useAppSelector(gameSelector)
+  const { isBooting, isShutdowning } = useAppSelector(gameSelector)
 
   function onBtnClickHandler() {
     if (passwordValue === password && login === loginValue) {
       dispatch({type: 'game', payload: {
         isAuth: true,
+        isBooted: true
       }})
-      myTimeouts.create(() => {
+      setTimeout(() => {
         spawnModal('T-16-G обнаружила внешнее подключение и самоуничтожилась...', 10, navigate)
         finishGame(dispatch)
       }, 20000)
@@ -35,7 +35,7 @@ const NotAuthPanel = () => {
   
   return (
     <>
-      {!isBooting 
+      {!isBooting && !isShutdowning
       ?
         <>
           <input 
@@ -59,7 +59,7 @@ const NotAuthPanel = () => {
           >Войти</button>
           {error && <span>Некорректные данные</span>}
         </>
-      : 'Rebooting...'}
+      : `${isBooting ? 'Booting...' : 'Shutdowning...'}`}
     </>
   );
 };

@@ -84,15 +84,22 @@ const Panel = () => {
             isBooting: false,
           }})
           myTimeouts.clear(timeoutId)
-        }, 8000)
+        }, 5000)
       }
 
       // Shutdown
       if (!isAuth && isBooted && time >= 3 * 60 + 30 && time < 7 * 60) {
         dispatch({type: 'game', payload: { 
           isBooted: false,
+          isShutdowning: true,
         }})
         myTimeouts.clearAll()
+        const timeoutId = myTimeouts.create(() => {
+          dispatch({type: 'game', payload: { 
+            isShutdowning: false,
+          }})
+          myTimeouts.clear(timeoutId)
+        }, 5000)
       }
     } else {
       // Error
@@ -105,8 +112,15 @@ const Panel = () => {
       && time >= ((10 - 7) * 60 )) {
         dispatch({type: 'game', payload: { 
           isBooted: false,
+          isBooting: true
         }})
         myTimeouts.clearAll()
+        const timeoutId = myTimeouts.create(() => {
+          dispatch({type: 'game', payload: { 
+            isBooting: false,
+          }})
+          myTimeouts.clear(timeoutId)
+        }, 5000)
       }
 
       // Autoboot

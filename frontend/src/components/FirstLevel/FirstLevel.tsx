@@ -2,7 +2,9 @@ import { useGLTF } from '@react-three/drei'
 import { useAppSelector } from '../../app/hooks'
 import { gameSelector } from '../../app/selectors/gameSelector'
 import { GLTFResult } from '../../types'
+import BootingText from '../models/BootingText'
 import ErrorText from '../models/ErrorText'
+import ShutdowningText from '../models/ShutdowningText'
 //@ts-ignore
 import level_1 from './../../assets/3D/level_1.1.gltf'
 
@@ -15,13 +17,17 @@ export function FisrtLevel() {
     isContramot2, 
     isContramotor1Broken,
     isBooted,
-    isError
+    isError,
+    isShutdowning,
+    isBooting
   } = useAppSelector(gameSelector)
 
   return (
     <group dispose={null}>
       {/* <mesh geometry={nodes.plane.geometry} material={materials.plane} position={[0, -0.21, 0]} scale={94.98}/> */}
       {isError && <ErrorText/>}
+      {isShutdowning && <ShutdowningText/>}
+      {isBooting && <BootingText/>}
       <mesh geometry={nodes['3_cube'].geometry} castShadow material={materials.object} position={[5.5, 0.5, 1.5]}>
         <meshLambertMaterial wireframe color={'black'}/>
       </mesh>

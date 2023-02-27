@@ -12,6 +12,7 @@ export interface GameStoreTypes {
   isBooting: boolean;
   isError: boolean;
   isAuth: boolean;
+  isShutdowning: boolean;
 }
 
 const game = createAction<GameStoreTypes, 'game'>('game')
@@ -27,6 +28,7 @@ export const defaultState = {
   isContramotor1Broken: false,
   rate: 2100,
   isBooting: false,
+  isShutdowning: false,
   isError: false,
   showPanel: !('ontouchstart' in window)
 }
