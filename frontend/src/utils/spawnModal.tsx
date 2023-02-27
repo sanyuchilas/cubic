@@ -10,6 +10,7 @@ export const spawnModal = (
   const modal = document.querySelector('#modal') as HTMLElement
   const btn = document.createElement('button')
   btn.innerHTML = '<u>Пропустить</u>'
+  btn.style.padding = '0.5rem'
   btn.addEventListener('click', hideModal);
 
   function showModal() {
