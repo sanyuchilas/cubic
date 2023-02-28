@@ -16,6 +16,7 @@ const AuthPanel = () => {
     showPanel,
     isDirty1,
     isDirty2,
+    randomize
   } = useAppSelector(gameSelector)
   const navigate = useNavigate()
   const dispatch = useAppDispatch()
@@ -28,7 +29,7 @@ const AuthPanel = () => {
   }
 
   function onTransgressClickHandler(evt: React.MouseEvent<HTMLButtonElement>) {
-    if (workload <= 30) {
+    if (workload <= 30 + randomize) {
       spawnModal(WIN_GAME_TEXT, 10, navigate, dispatch)
       return
     }
@@ -47,7 +48,7 @@ const AuthPanel = () => {
       type: 'game',
       payload: {
         isContramotor1Broken: true,
-        workload: workload - 20,
+        workload: workload - 18,
         isDirty1: true,
         isDirty2: true
       }

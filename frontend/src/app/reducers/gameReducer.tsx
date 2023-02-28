@@ -14,6 +14,9 @@ export interface GameStoreTypes {
   isAuth: boolean;
   isShutdowning: boolean;
   freezeEffect: number;
+  randomize: number;
+  isMaxFreezed: boolean;
+  isFreezeEnd: boolean;
 }
 
 const game = createAction<GameStoreTypes, 'game'>('game')
@@ -32,6 +35,9 @@ export const defaultState = {
   isShutdowning: false,
   isError: false,
   freezeEffect: 0,
+  randomize: 0,
+  isMaxFreezed: false,
+  isFreezeEnd: false,
   showPanel: !('ontouchstart' in window)
 }
 

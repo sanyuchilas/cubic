@@ -25,7 +25,9 @@ const Panel = () => {
     isAuth,
     workload,
     freezeEffect,
-    isContramot1Broken
+    isContramot1Broken,
+    isMaxFreezed,
+    isFreezeEnd
   } = useAppSelector(gameSelector)
   const dispatch = useDispatch()
   const navigate = useNavigate()
@@ -39,41 +41,53 @@ const Panel = () => {
     })
   }, [isContramot2])
 
+  useEffect(() => {
+    dispatch({
+      type: 'game',
+      payload: {
+        workload: workload + freezeEffect
+      }
+    })
+  }, [isFreezeEnd])
+
   function randomizeWorkload() {
     let random = Math.random()
-    if (random > 0.98) return 1
-    if (random < 0.02) return -1
+    if (random > 0.9) return 1
+    if (random < 0.1) return -1
     return 0
   }
 
   function everyInterval() {
-    let accident = randomizeWorkload()
+    let randomize = randomizeWorkload()
+    const isMaxFreezed = store.getState().game.isMaxFreezed
+    const isFreezeEnd = store.getState().game.isFreezeEnd
     const time = store.getState().game.time
     const rate = store.getState().game.rate
     const workload = store.getState().game.workload
     const isContramot2 = store.getState().game.isContramot2
-    const freezeChange = Math.floor(time / 120) + 
-      (Math.floor(time / 120) >= 1 ? (3100 - rate) / 1000 : 1) - 1
+    let freezeChange = 0
     const freezeEffect = store.getState().game.freezeEffect
 
     if (isContramot2 && time <= 240 && time % 2 === 0) {
-      accident -= freezeChange
+      freezeChange = Math.floor(time / 120) + 
+        (Math.floor(time / 120) >= 1 ? (3100 - rate) / 1000 : 1) - 1
     }
 
-    let finalWorkload = Math.max(0, Math.min(100, workload + accident))
-    let finalFreezeEffect = (freezeEffect - (freezeChange ? accident : 0)) > 40 
-    ? 40
-    : freezeEffect - (freezeChange ? accident : 0)
-
-    if (isContramot2 && time > 240) {
-      finalWorkload += freezeEffect
-      finalFreezeEffect = 0
+    if (isMaxFreezed || isFreezeEnd) {
+      randomize = 0
+      freezeChange = 0
     }
+    
+    let finalFreezeEffect = Math.min(freezeEffect + freezeChange, 40)
+    let finalWorkload = Math.max(0, Math.min(100, workload + randomize - freezeChange))
 
     dispatch({type: 'game', payload: {
       time: time + (3100 - rate) / 1000,
       workload: finalWorkload,
-      freezeEffect: finalFreezeEffect
+      freezeEffect: finalFreezeEffect,
+      randomize: store.getState().game.randomize + randomize,
+      isMaxFreezed: finalFreezeEffect === 40 || isMaxFreezed,
+      isFreezeEnd: time > 240 || isFreezeEnd
     }})
   }
 
@@ -142,7 +156,7 @@ const Panel = () => {
           isBooted: false,
           isBooting: true,
           isContramotor1Broken: false,
-          workload: isContramot1Broken ? workload + 20 : workload,
+          workload: isContramot1Broken ? workload + 18 : workload,
           isDirty1: false,
           isDirty2: false
         }})
