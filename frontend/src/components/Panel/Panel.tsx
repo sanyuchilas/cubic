@@ -26,7 +26,6 @@ const Panel = () => {
     workload,
     freezeEffect,
     isContramot1Broken,
-    isMaxFreezed,
     isFreezeEnd
   } = useAppSelector(gameSelector)
   const dispatch = useDispatch()
