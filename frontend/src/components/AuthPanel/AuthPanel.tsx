@@ -3,7 +3,6 @@ import { useNavigate } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '../../app/hooks';
 import { gameSelector } from '../../app/selectors/gameSelector';
 import { WIN_GAME_TEXT } from '../../utils/constants';
-import { finishGame } from '../../utils/finishGame';
 import { spawnModal } from '../../utils/spawnModal';
 import styles from './AuthPanel.module.scss';
 
@@ -30,8 +29,7 @@ const AuthPanel = () => {
 
   function onTransgressClickHandler(evt: React.MouseEvent<HTMLButtonElement>) {
     if (workload <= 30) {
-      spawnModal(WIN_GAME_TEXT, 10, navigate)
-      finishGame(dispatch)
+      spawnModal(WIN_GAME_TEXT, 10, navigate, dispatch)
       return
     }
 
@@ -49,7 +47,7 @@ const AuthPanel = () => {
       type: 'game',
       payload: {
         isContramotor1Broken: true,
-        workload: workload - 15,
+        workload: workload - 20,
         isDirty1: true,
         isDirty2: true
       }

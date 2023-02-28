@@ -4,7 +4,6 @@ import { useNavigate } from 'react-router-dom';
 import { useAppSelector } from '../../app/hooks';
 import { gameSelector } from '../../app/selectors/gameSelector';
 import { store } from '../../app/store';
-import { finishGame } from '../../utils/finishGame';
 import { getAnomalyText } from '../../utils/getAnomalyText';
 import { myIntervals } from '../../utils/myIntervals';
 import { myTimeouts } from '../../utils/myTomiouts';
@@ -42,8 +41,8 @@ const Panel = () => {
 
   function randomizeWorkload() {
     let random = Math.random()
-    if (random > 0.9) return 1
-    if (random < 0.015) return -1
+    if (random > 0.98) return 1
+    if (random < 0.02) return -1
     return 0
   }
 
@@ -53,34 +52,41 @@ const Panel = () => {
     const rate = store.getState().game.rate
     const workload = store.getState().game.workload
     const isContramot2 = store.getState().game.isContramot2
-    const freezeChange = Math.floor(time / 100) + (3100 - rate) / 1000 - 1
+    const freezeChange = Math.floor(time / 120) + 
+      (Math.floor(time / 120) >= 1 ? (3100 - rate) / 1000 : 1) - 1
     const freezeEffect = store.getState().game.freezeEffect
 
     if (isContramot2 && time <= 240 && time % 2 === 0) {
       accident -= freezeChange
     }
 
+    let finalWorkload = Math.max(0, Math.min(100, workload + accident))
+    let finalFreezeEffect = (freezeEffect - (freezeChange ? accident : 0)) > 40 
+    ? 40
+    : freezeEffect - (freezeChange ? accident : 0)
+
+    if (isContramot2 && time > 240) {
+      finalWorkload += freezeEffect
+      finalFreezeEffect = 0
+    }
+
     dispatch({type: 'game', payload: {
       time: time + (3100 - rate) / 1000,
-      workload: Math.max(0, Math.min(100, workload + accident)),
-      freezeEffect: freezeEffect - (freezeChange ? accident : 0) > 46 
-      ? 46
-      : freezeEffect - (freezeChange ? accident : 0)
+      workload: finalWorkload,
+      freezeEffect: finalFreezeEffect
     }})
   }
 
   useEffect(() => {
     if (isDirty1 && isBooted && !myTimeouts.timeouts.size) {
       myTimeouts.create(() => {
-        spawnModal(getAnomalyText(1), 10, navigate)
-        finishGame(dispatch)
+        spawnModal(getAnomalyText(1), 10, navigate, dispatch)
       } , 15000)
     }
 
     if (isDirty2 && isBooted && !myTimeouts.timeouts.size) {
       myTimeouts.create(() => {
-        spawnModal(getAnomalyText(2), 10, navigate)
-        finishGame(dispatch)
+        spawnModal(getAnomalyText(2), 10, navigate, dispatch)
       } , 15000)
     }
 
@@ -136,7 +142,7 @@ const Panel = () => {
           isBooted: false,
           isBooting: true,
           isContramotor1Broken: false,
-          workload: isContramot1Broken ? workload + 15 : workload,
+          workload: isContramot1Broken ? workload + 20 : workload,
           isDirty1: false,
           isDirty2: false
         }})
@@ -156,8 +162,7 @@ const Panel = () => {
     }
 
     if (time >= 60 * 5) {
-      spawnModal('T-16-G обнаружила внешнее подключение и самоуничтожилась...', 10, navigate)
-      finishGame(dispatch)
+      spawnModal('T-16-G обнаружила внешнее подключение и самоуничтожилась...', 10, navigate, dispatch)
     }
   }, [time])
 
