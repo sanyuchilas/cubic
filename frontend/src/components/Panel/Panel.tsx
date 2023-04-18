@@ -174,8 +174,6 @@ const Panel = () => {
       }
     }
 
-    console.log(isBooted, isAuth)
-
     if (time >= 60 * 5) {
       spawnModal('T-16-G обнаружила внешнее подключение и самоуничтожилась...', 10, navigate, dispatch)
     }
