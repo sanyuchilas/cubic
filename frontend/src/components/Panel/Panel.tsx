@@ -25,7 +25,7 @@ const Panel = () => {
     isAuth,
     workload,
     freezeEffect,
-    isContramot1Broken,
+    isContramotor1Broken,
     isFreezeEnd
   } = useAppSelector(gameSelector)
   const dispatch = useDispatch()
@@ -155,7 +155,7 @@ const Panel = () => {
           isBooted: false,
           isBooting: true,
           isContramotor1Broken: false,
-          workload: isContramot1Broken ? workload + 18 : workload,
+          workload: isContramotor1Broken ? workload + 18 : workload,
           isDirty1: false,
           isDirty2: false
         }})
@@ -173,6 +173,8 @@ const Panel = () => {
         dispatch({type: 'game', payload: { isBooted: true }})
       }
     }
+
+    console.log(isBooted, isAuth)
 
     if (time >= 60 * 5) {
       spawnModal('T-16-G обнаружила внешнее подключение и самоуничтожилась...', 10, navigate, dispatch)
