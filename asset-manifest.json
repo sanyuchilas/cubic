@@ -1,17 +1,17 @@
 {
   "files": {
-    "main.css": "/cubic/static/css/main.c7e1e8b5.css",
-    "main.js": "/cubic/static/js/main.72796a48.js",
-    "static/media/level_1.1.gltf": "/cubic/static/media/level_1.1.4d84d1797ffb0b1e79f7.gltf",
-    "static/media/error_text.gltf": "/cubic/static/media/error_text.c47aa0d831ff26ee4f6a.gltf",
-    "static/media/booting_text.gltf": "/cubic/static/media/booting_text.c6b6e0d821c82c549841.gltf",
-    "static/media/shutdowning_text.gltf": "/cubic/static/media/shutdowning_text.9e87a8cb0c8d545da9ec.gltf",
-    "index.html": "/cubic/index.html",
-    "main.c7e1e8b5.css.map": "/cubic/static/css/main.c7e1e8b5.css.map",
-    "main.72796a48.js.map": "/cubic/static/js/main.72796a48.js.map"
+    "main.css": "./static/css/main.c7e1e8b5.css",
+    "main.js": "./static/js/main.98e4b449.js",
+    "static/media/level_1.1.gltf": "./static/media/level_1.1.4d84d1797ffb0b1e79f7.gltf",
+    "static/media/error_text.gltf": "./static/media/error_text.c47aa0d831ff26ee4f6a.gltf",
+    "static/media/booting_text.gltf": "./static/media/booting_text.c6b6e0d821c82c549841.gltf",
+    "static/media/shutdowning_text.gltf": "./static/media/shutdowning_text.9e87a8cb0c8d545da9ec.gltf",
+    "index.html": "./index.html",
+    "main.c7e1e8b5.css.map": "./static/css/main.c7e1e8b5.css.map",
+    "main.98e4b449.js.map": "./static/js/main.98e4b449.js.map"
   },
   "entrypoints": [
     "static/css/main.c7e1e8b5.css",
-    "static/js/main.72796a48.js"
+    "static/js/main.98e4b449.js"
   ]
 }
