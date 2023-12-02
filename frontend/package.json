@@ -1,7 +1,7 @@
 {
   "name": "cubic",
   "version": "0.1.0",
-  "homepage": "https://cubic.tk",
+  "homepage": "https://sanyuchilas.github.io/cubic",
   "private": true,
   "dependencies": {
     "@babel/core": "^7.20.12",
